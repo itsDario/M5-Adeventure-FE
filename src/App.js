@@ -11,7 +11,7 @@ class App extends Component {
     super(props);
     this.state = {
       authToken: '',
-      page: 0,
+      page: 1,
     }
   }
 
@@ -26,7 +26,7 @@ class App extends Component {
       case 1:
         return <div><button onClick={this.logout}>Log-out</button><GameContainer /></div>
       default:
-        return <div>defaulted</div>
+        return <div>Error Defaulted</div>
     }
   }
 
@@ -49,13 +49,12 @@ class App extends Component {
         }
       })
     }).then(res => res.json()).then(res => {
-      console.log(res);
       this.setState({
         authToken: res['jwt']
       })
     })
   };
-  logout = event => {
+  logout = () => {
     // this.props.logout();
     this.setState({ authToken: '', page: 0 })
   };
