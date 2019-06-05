@@ -4,17 +4,34 @@ import EnemiesGenerator from "./EnemiesGenerator";
 
 export default class GameContainer extends Component {
 
-    state = {
-        player: {
-            x: 500,
-            y: 500,
-            health: 3,
-            lastHit: Date.now(),
-            direction: 'up',
-            swordSize: 50,
-            attacking: false
-        },
-        enemies: [{ id: 0, x: 400, y: 500 }, { id: 1, x: 400, y: 600 }],
+    constructor(props) {
+        super(props);
+        this.state = {
+            player: {
+                x: 500,
+                y: 500,
+                health: 3,
+                lastHit: Date.now(),
+                direction: 'up',
+                swordSize: 50,
+                attacking: false
+            },
+            enemies: [{ id: 0, x: 400, y: 500 }, { id: 1, x: 400, y: 600 }],
+        }
+    }
+    resetState = () => {
+        this.setState({
+            player: {
+                x: 500,
+                y: 500,
+                health: 3,
+                lastHit: Date.now(),
+                direction: 'up',
+                swordSize: 50,
+                attacking: false
+            },
+            enemies: [{ id: 0, x: 400, y: 500 }, { id: 1, x: 400, y: 600 }],
+        })
     }
 
     swordOffSet = (player) => {
@@ -63,7 +80,9 @@ export default class GameContainer extends Component {
                     }
                 }))
                 console.log(this.state.player.health);
-
+                if (this.state.player.health < 1) {
+                    this.resetState()
+                }
             }
         })
     }
@@ -95,7 +114,7 @@ export default class GameContainer extends Component {
             <div
                 classID='gameBody'
             >
-                <Player playerInfo={this.state.player} returnInfo={this.setPlayerInfo} attack={this.checkPlayerSwordHits} />
+                <Player resetState={this.resetPlayer} playerInfo={this.state.player} returnInfo={this.setPlayerInfo} attack={this.checkPlayerSwordHits} />
                 <EnemiesGenerator enemies={this.state.enemies} />
             </div >
         )
