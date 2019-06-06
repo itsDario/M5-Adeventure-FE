@@ -6,32 +6,26 @@ export default class GameContainer extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
+        this.defaultState = {
             player: {
                 x: 500,
                 y: 500,
+                width: 100,
+                height: 100,
                 health: 3,
                 lastHit: Date.now(),
                 direction: 'up',
-                swordSize: 50,
+                swordSize: 30,
                 attacking: false
             },
-            enemies: [{ id: 0, x: 400, y: 500 }, { id: 1, x: 400, y: 600 }],
+            enemies: [
+                { id: 0, x: 200, y: 500, width: 64, height: 0, direction: 'up' },
+                { id: 1, x: 800, y: 200, width: 64, height: 0, direction: 'up' }],
         }
+        this.state = this.defaultState
     }
     resetState = () => {
-        this.setState({
-            player: {
-                x: 500,
-                y: 500,
-                health: 3,
-                lastHit: Date.now(),
-                direction: 'up',
-                swordSize: 50,
-                attacking: false
-            },
-            enemies: [{ id: 0, x: 400, y: 500 }, { id: 1, x: 400, y: 600 }],
-        })
+        this.setState(this.defaultState)
     }
 
     swordOffSet = (player) => {
@@ -53,7 +47,8 @@ export default class GameContainer extends Component {
             default:
                 break;
         }
-        return { x, y }
+
+        return { ...player, x, y }
     }
 
     setPlayerInfo = (dir) => {
@@ -101,11 +96,15 @@ export default class GameContainer extends Component {
     }
 
     isColliding = (a, b) => {
+        // console.log((a.y + a.height) < (b.y))
+        // console.log(a.y > (b.y + b.height))
+        // console.log((a.x + a.width) < b.x)
+        // console.log(a.x > (b.x + b.width))
         return !(
-            ((a.y + 66) < (b.y)) ||
-            (a.y > (b.y + 66)) ||
-            ((a.x + 66) < b.x) ||
-            (a.x > (b.x + 66))
+            ((a.y + a.height) < (b.y)) ||
+            (a.y > (b.y + b.height)) ||
+            ((a.x + a.width) < b.x) ||
+            (a.x > (b.x + b.width))
         );
     }
 
@@ -114,7 +113,12 @@ export default class GameContainer extends Component {
             <div
                 classID='gameBody'
             >
-                <Player resetState={this.resetPlayer} playerInfo={this.state.player} returnInfo={this.setPlayerInfo} attack={this.checkPlayerSwordHits} />
+                <Player
+                    resetState={this.resetPlayer}
+                    playerInfo={this.state.player}
+                    returnInfo={this.setPlayerInfo}
+                    attack={this.checkPlayerSwordHits}
+                    swordOffSet={this.swordOffSet} />
                 <EnemiesGenerator enemies={this.state.enemies} />
             </div >
         )
