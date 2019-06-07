@@ -127,6 +127,8 @@ export default class Slime extends Component {
                     className={'slime'}
                     style={{
                         width: '100%',
+                        marginTop: '-30px',
+                        marginLeft: '-20px',
                     }}
                 />
             </div>

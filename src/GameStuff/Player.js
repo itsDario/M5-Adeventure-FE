@@ -199,6 +199,10 @@ export default class Player extends Component {
             }}>
                 <img
                     alt='O'
+                    style={{
+                        marginTop: '-30px',
+                        marginLeft: '-50px',
+                    }}
                     // src={`player` + `${this.props.playerInfo.direction}_1`}
                     src={this.attack ? playerAttacks[`${this.props.playerInfo.direction}${this.stepFrame}`] : playerImages[`${this.props.playerInfo.direction}${this.stepFrame}`]}
                     className={'player'}

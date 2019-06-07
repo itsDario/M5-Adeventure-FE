@@ -20,7 +20,7 @@ export default class FloorArt extends Component {
         for (var x = 0; x <= 10; x += 1) {
             for (var y = 0; y <= 10; y += 1) {
                 tileGrid.push(<img
-                    key={1}
+                    key={tileGrid.length}
                     style={{
                         position: 'absolute',
                         width: '12%',
@@ -41,11 +41,6 @@ export default class FloorArt extends Component {
         return false
     }
 
-
-    images = () => {
-
-    }
-
     render() {
         return (
             <div
@@ -53,7 +48,6 @@ export default class FloorArt extends Component {
                     width: '100%',
                     height: '100%',
                     position: 'absolute',
-                    color: 'green',
                     top: `0px`,
                     left: `0px`,
                 }}>

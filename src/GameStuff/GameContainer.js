@@ -11,8 +11,8 @@ export default class GameContainer extends Component {
         super(props);
         this.defaultState = {
             player: {
-                x: 500,
-                y: 500,
+                x: window.innerWidth / 2,
+                y: window.innerHeight / 2,
                 width: 80,
                 height: 80,
                 health: 3,
@@ -28,10 +28,10 @@ export default class GameContainer extends Component {
                 { id: 3, x: 800, y: 500, width: 85, height: 75, direction: 'up' },
             ],
             walls: [
-                { id: 0, x: 0, y: 0, width: 80, height: 1000 },//leftwall
-                { id: 1, x: 1200, y: 0, width: 80, height: 1000 },//rightwall
-                { id: 2, x: 0, y: 0, width: 1300, height: 80 },//top wall
-                { id: 3, x: 0, y: 900, width: 1300, height: 80 },//bottom wall
+                { id: 0, x: 0, y: 0, width: 80, height: window.innerHeight },//leftwall
+                { id: 1, x: window.innerWidth - 80, y: 0, width: 80, height: window.innerHeight },//rightwall
+                { id: 2, x: 0, y: 0, width: window.innerWidth, height: 80 },//top wall
+                { id: 3, x: 0, y: window.innerHeight - 80, width: window.innerWidth, height: 80 },//bottom wall
             ]
         }
         this.state = this.defaultState
@@ -154,7 +154,7 @@ export default class GameContainer extends Component {
                 classID='gameBody'
             >
                 <FloorArt />
-                <WallArt />
+                <WallArt wallArea={this.state.walls} />
                 <Player
                     resetState={this.resetPlayer}
                     playerInfo={this.state.player}
@@ -162,7 +162,7 @@ export default class GameContainer extends Component {
                     attack={this.checkPlayerSwordHits}
                     swordOffSet={this.swordOffSet} />
                 <EnemiesGenerator returnInfo={this.setMonsterInfo} enemies={this.state.enemies} />
-                <HealthBar />
+                <HealthBar health={this.state.player.health} />
             </div >
         )
     }
