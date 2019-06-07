@@ -51,7 +51,6 @@ export default class Player extends Component {
         document.addEventListener("keyup", this.handleKeyUp);
         this.intervalID = setInterval(this.updatePlayer, 20);
         this.intervalIDSprite = setInterval(this.updatePlayerSprite, 200);
-        // document.getElementById('gameBody')
     }
 
     componentWillUnmount() {
@@ -62,6 +61,7 @@ export default class Player extends Component {
     }
 
     handleKeyDown = (e) => {
+        e.preventDefault()
 
         if (e.key === 'a' || e.key === 'ArrowLeft') {
             this.left = true
@@ -111,25 +111,6 @@ export default class Player extends Component {
                 this.attack = false
             }
         }
-    }
-
-    directionToXY = () => {
-        let x = 0
-        let y = 0
-        if (this.direction === 'left') {
-            x = -70
-            y = -15
-        } else if (this.direction === 'right') {
-            x = 55
-            y = -15
-        } else if (this.direction === 'up') {
-            x = -15
-            y = -70
-        } else if (this.direction === 'down') {
-            x = -15
-            y = 55
-        }
-        return { x, y }
     }
 
     updatePlayer = () => {
@@ -221,9 +202,6 @@ export default class Player extends Component {
                     // src={`player` + `${this.props.playerInfo.direction}_1`}
                     src={this.attack ? playerAttacks[`${this.props.playerInfo.direction}${this.stepFrame}`] : playerImages[`${this.props.playerInfo.direction}${this.stepFrame}`]}
                     className={'player'}
-                    style={{
-                        backgroundSize: '880px',
-                    }}
                 />
             </div >
         )

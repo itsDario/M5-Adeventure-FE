@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import Player from "./Player";
 import EnemiesGenerator from "./EnemiesGenerator";
+import FloorArt from './FloorArt';
+import WallArt from './WallArt';
+import HealthBar from './HealthBar';
 
 export default class GameContainer extends Component {
 
@@ -10,8 +13,8 @@ export default class GameContainer extends Component {
             player: {
                 x: 500,
                 y: 500,
-                width: 100,
-                height: 100,
+                width: 80,
+                height: 80,
                 health: 3,
                 lastHit: Date.now(),
                 direction: 'up',
@@ -19,8 +22,17 @@ export default class GameContainer extends Component {
                 attacking: false
             },
             enemies: [
-                { id: 0, x: 200, y: 500, width: 64, height: 0, direction: 'up' },
-                { id: 1, x: 800, y: 200, width: 64, height: 0, direction: 'up' }],
+                { id: 0, x: 200, y: 500, width: 85, height: 75, direction: 'up' },
+                { id: 1, x: 800, y: 200, width: 85, height: 75, direction: 'up' },
+                { id: 2, x: 100, y: 200, width: 85, height: 75, direction: 'up' },
+                { id: 3, x: 800, y: 500, width: 85, height: 75, direction: 'up' },
+            ],
+            walls: [
+                { id: 0, x: 0, y: 0, width: 80, height: 1000 },//leftwall
+                { id: 1, x: 1200, y: 0, width: 80, height: 1000 },//rightwall
+                { id: 2, x: 0, y: 0, width: 1300, height: 80 },//top wall
+                { id: 3, x: 0, y: 900, width: 1300, height: 80 },//bottom wall
+            ]
         }
         this.state = this.defaultState
     }
@@ -51,17 +63,35 @@ export default class GameContainer extends Component {
         return { ...player, x, y }
     }
 
-    setPlayerInfo = (dir) => {
+    setPlayerInfo = (newPlayer) => {
         this.checkPlayerEnemyCollisions()
-        this.setState(prevState => ({
-            player: {
-                ...prevState.player,
-                x: prevState.player.x + dir.x,
-                y: prevState.player.y - dir.y,
-                direction: dir.direction,
-            }
-        }))
 
+        let player = { ...this.state.player }
+        player.x += newPlayer.x
+        player.y -= newPlayer.y
+        // console.log(!this.checkWallCollisions(player))
+        if (!this.checkWallCollisions(player)) {
+            this.setState(prevState => ({
+                player: {
+                    ...prevState.player,
+                    x: prevState.player.x + newPlayer.x,
+                    y: prevState.player.y - newPlayer.y,
+                    direction: newPlayer.direction,
+                }
+            }))
+        }
+    }
+
+    setMonsterInfo = (info) => {
+        let newEnemies = this.state.enemies
+
+
+        if (!this.checkWallCollisions(info)) {
+            newEnemies = newEnemies.map(mon => (mon.id === info.id) ? info : mon)
+            this.setState(prevState => ({
+                enemies: newEnemies
+            }))
+        }
     }
 
     checkPlayerEnemyCollisions = () => {
@@ -74,7 +104,6 @@ export default class GameContainer extends Component {
                         lastHit: Date.now()
                     }
                 }))
-                console.log(this.state.player.health);
                 if (this.state.player.health < 1) {
                     this.resetState()
                 }
@@ -82,7 +111,7 @@ export default class GameContainer extends Component {
         })
     }
 
-    checkPlayerSwordHits = () => {///inProgress
+    checkPlayerSwordHits = () => {
         this.state.enemies.forEach((enemy, index) => {
             // console.log(enemy);
 
@@ -93,6 +122,16 @@ export default class GameContainer extends Component {
                 // console.log('attack hit');
             }
         })
+    }
+
+    checkWallCollisions = (object) => {
+        let touching = false
+        this.state.walls.forEach(wall => {
+            if (this.isColliding(wall, object)) {
+                touching = true
+            }
+        })
+        return touching
     }
 
     isColliding = (a, b) => {
@@ -108,18 +147,22 @@ export default class GameContainer extends Component {
         );
     }
 
+
     render() {
         return (
             <div
                 classID='gameBody'
             >
+                <FloorArt />
+                <WallArt />
                 <Player
                     resetState={this.resetPlayer}
                     playerInfo={this.state.player}
                     returnInfo={this.setPlayerInfo}
                     attack={this.checkPlayerSwordHits}
                     swordOffSet={this.swordOffSet} />
-                <EnemiesGenerator enemies={this.state.enemies} />
+                <EnemiesGenerator returnInfo={this.setMonsterInfo} enemies={this.state.enemies} />
+                <HealthBar />
             </div >
         )
     }

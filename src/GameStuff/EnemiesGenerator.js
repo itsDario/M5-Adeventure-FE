@@ -11,7 +11,7 @@ export default class EnemiesGenerator extends Component {
     renderEnemies = () => {
         return this.props.enemies.map((ene, index) => {
             // console.log(ene);
-            return <Slime location={ene} key={index} />
+            return <Slime returnInfo={this.props.returnInfo} location={ene} key={index} />
         });
     }
 
