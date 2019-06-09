@@ -88,10 +88,6 @@ export default class Slime extends Component {
         x += this.props.location.x
         y += this.props.location.y
 
-        // console.log(this.props.location);
-
-        // console.log({ ...this.props.location, x, y, direction });
-
         this.props.returnInfo({ ...this.props.location, x, y, direction })
     }
 

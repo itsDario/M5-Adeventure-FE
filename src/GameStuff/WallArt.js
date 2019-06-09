@@ -9,9 +9,7 @@ export default class WallArt extends Component {
 
     makeWallImageGrid = () => {
 
-        console.log(this.props.wallArea)
         return this.props.wallArea.map((wall, index) => {
-            console.log(wall)
             return <div
                 // key= {index}
                 style={{
