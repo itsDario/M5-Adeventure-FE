@@ -78,6 +78,9 @@ export default class Player extends Component {
         if (e.key === ' ' && !(this.attack)) {
             this.attackStart()
         }
+        if (e.key === 'e' || e.key === 'Shift') {
+            this.props.useEgg()
+        }
     }
 
     handleKeyUp = (e) => {

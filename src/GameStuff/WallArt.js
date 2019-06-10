@@ -11,7 +11,7 @@ export default class WallArt extends Component {
 
         return this.props.wallArea.map((wall, index) => {
             return <div
-                // key= {index}
+                key={index}
                 style={{
                     position: 'absolute',
                     boarder: '5px',

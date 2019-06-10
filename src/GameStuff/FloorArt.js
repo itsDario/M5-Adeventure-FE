@@ -1,19 +1,16 @@
 import React, { Component } from 'react'
 // import Ground1 from '../images/floor/rockyGround.png'
 import Ground1 from '../images/floor/grass03.png'
-// import Ground2 from '../images/floor/grassGround.png'
+import Ground2 from '../images/floor/grassGround.png'
 // import Ground3 from '../images/floor/waterGround.png'
 
 export default class FloorArt extends Component {
-
-    state = {
-    }
 
     makeFloorImageGrid = () => {
 
         this.floorArr = {
             'g1': Ground1,
-            // 'g2': Ground2,
+            'g2': Ground2,
             // 'g3': Ground3,
         }
 
@@ -31,7 +28,8 @@ export default class FloorArt extends Component {
                         left: `${x * 512}px`,
                     }
                     }
-                    src={this.floorArr[`g${Math.floor(Math.random() * 1) + 1}`]}
+                    // Math.floor(Math.random() * 1) + 1 //old random tiles
+                    src={this.floorArr[`g${this.props.floor % 2}`]}
                     alt='ground'
                 />)
             }

@@ -3,6 +3,8 @@ import Player from "./Player";
 import EnemiesGenerator from "./EnemiesGenerator";
 import FloorArt from './FloorArt';
 import WallArt from './WallArt';
+import FloorEggs from './FloorEggs';
+import HeldEggs from './HeldEggs';
 import HealthBar from './HealthBar';
 
 export default class GameContainer extends Component {
@@ -19,24 +21,25 @@ export default class GameContainer extends Component {
                 lastHit: Date.now(),
                 direction: 'up',
                 swordSize: 30,
-                attacking: false
+                attacking: false,
             },
             enemies: [
-                { id: 0, x: 200, y: 500, width: 85, height: 75, direction: 'up' },
-                { id: 1, x: 800, y: 200, width: 85, height: 75, direction: 'up' },
-                { id: 2, x: 100, y: 200, width: 85, height: 75, direction: 'up' },
-                { id: 3, x: 800, y: 500, width: 85, height: 75, direction: 'up' },
+            ],
+            groundEggs: [
             ],
             walls: [
                 { id: 0, x: 0, y: 0, width: 80, height: window.innerHeight },//leftwall
                 { id: 1, x: window.innerWidth - 80, y: 0, width: 80, height: window.innerHeight },//rightwall
                 { id: 2, x: 0, y: 0, width: window.innerWidth, height: 80 },//top wall
                 { id: 3, x: 0, y: window.innerHeight - 80, width: window.innerWidth, height: 80 },//bottom wall
-            ]
+            ],
+            floor: 1,
+            eggs: 3,
         }
         this.state = this.defaultState
     }
     resetState = () => {
+
         this.setState(this.defaultState)
     }
 
@@ -69,7 +72,6 @@ export default class GameContainer extends Component {
         let player = { ...this.state.player }
         player.x += newPlayer.x
         player.y -= newPlayer.y
-        // console.log(!this.checkWallCollisions(player))
         if (!this.checkWallCollisions(player)) {
             this.setState(prevState => ({
                 player: {
@@ -82,9 +84,39 @@ export default class GameContainer extends Component {
         }
     }
 
+    nextLevel = (level) => {
+        this.setState({
+            floor: level
+        })
+    }
+
+    useEgg = () => {
+        if (this.state.eggs > 0 && this.state.player.health < 3) {
+            this.setState(prevState => ({
+                eggs: prevState.eggs - 1,
+                player: {
+                    ...prevState.player,
+                    health: prevState.player.health + 1,
+                }
+            }))
+        }
+    }
+
+    spawnFloorEgg = (enemy) => {
+        let egg = enemy
+        let chance = Math.floor(Math.random() * 5)
+        if (chance < 2) {
+            egg.id = this.state.groundEggs.length
+            egg.width = 25
+            egg.height = 25
+            this.setState(prevState => ({
+                groundEggs: [...prevState.groundEggs, egg]
+            }))
+        }
+    }
+
     setMonsterInfo = (info) => {
         let newEnemies = this.state.enemies
-
 
         if (!this.checkWallCollisions(info)) {
             newEnemies = newEnemies.map(mon => (mon.id === info.id) ? info : mon)
@@ -94,7 +126,15 @@ export default class GameContainer extends Component {
         }
     }
 
+    newMonster = (enes) => {//x, y
+
+        this.setState({
+            enemies: enes
+        })
+    }
+
     checkPlayerEnemyCollisions = () => {
+        this.checkEggCollisions()
         this.state.enemies.forEach(enemy => {
             if (this.state.player.lastHit + 1000 < Date.now() && this.isColliding(enemy, this.state.player)) {
                 this.setState(prevState => ({
@@ -111,15 +151,26 @@ export default class GameContainer extends Component {
         })
     }
 
+    checkEggCollisions = () => {
+        this.state.groundEggs.forEach(egg => {
+            if (this.isColliding(egg, this.state.player)) {
+                this.setState(prevState => ({
+                    eggs: prevState.eggs + 1,
+                    groundEggs: prevState.groundEggs.filter(oldEgg => oldEgg.id !== egg.id)
+                }))
+            }
+        })
+    }
+
     checkPlayerSwordHits = () => {
         this.state.enemies.forEach((enemy, index) => {
-            // console.log(enemy);
 
             if (this.isColliding(enemy, this.swordOffSet(this.state.player))) {
                 this.setState(prevState => ({
-                    enemies: prevState.enemies.filter(oldEnemy => oldEnemy.id !== enemy.id)
+                    enemies: prevState.enemies.filter(oldEnemy => oldEnemy.id !== enemy.id),
+                    coins: prevState.coins + 1,
                 }))
-                // console.log('attack hit');
+                this.spawnFloorEgg(enemy)
             }
         })
     }
@@ -135,10 +186,6 @@ export default class GameContainer extends Component {
     }
 
     isColliding = (a, b) => {
-        // console.log((a.y + a.height) < (b.y))
-        // console.log(a.y > (b.y + b.height))
-        // console.log((a.x + a.width) < b.x)
-        // console.log(a.x > (b.x + b.width))
         return !(
             ((a.y + a.height) < (b.y)) ||
             (a.y > (b.y + b.height)) ||
@@ -147,21 +194,27 @@ export default class GameContainer extends Component {
         );
     }
 
-
     render() {
         return (
-            <div
-                classID='gameBody'
-            >
-                <FloorArt />
+            <div classID='gameBody'>
+                <FloorArt floor={this.state.floor} />
                 <WallArt wallArea={this.state.walls} />
                 <Player
+                    useEgg={this.useEgg}
                     resetState={this.resetPlayer}
                     playerInfo={this.state.player}
                     returnInfo={this.setPlayerInfo}
                     attack={this.checkPlayerSwordHits}
                     swordOffSet={this.swordOffSet} />
-                <EnemiesGenerator returnInfo={this.setMonsterInfo} enemies={this.state.enemies} />
+                <EnemiesGenerator
+                    newMonster={this.newMonster}
+                    returnInfo={this.setMonsterInfo}
+                    enemies={this.state.enemies}
+                    floor={this.state.floor}
+                    nextFloor={this.nextLevel}
+                />
+                <FloorEggs eggArr={this.state.groundEggs} />
+                <HeldEggs eggs={this.state.eggs} />
                 <HealthBar health={this.state.player.health} />
             </div >
         )
