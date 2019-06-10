@@ -19,12 +19,16 @@ export default class EnemiesGenerator extends Component {
     generateEnemies = () => {
         let enes = []
         for (let i = 0; i < (this.props.floor); i++) {
-            let random = Math.floor(Math.random() * 2)
+            let random = Math.floor(Math.random() * 4)
 
             if (random === 0) {
-                enes.push({ id: i, x: Math.floor((Math.random() * 500) + 200), y: 200, width: 85, height: 75, direction: 'up' })
+                enes.push({ id: i, x: window.innerWidth / 4, y: window.innerHeight / 4, width: 85, height: 75, direction: 'up' })
+            } else if (random === 1) {
+                enes.push({ id: i, x: window.innerWidth / 4 * 3, y: window.innerHeight / 4, width: 85, height: 75, direction: 'up' })
+            } else if (random === 2) {
+                enes.push({ id: i, x: window.innerWidth / 4, y: window.innerHeight / 4 * 3, width: 85, height: 75, direction: 'up' })
             } else {
-                enes.push({ id: i, x: Math.floor((Math.random() * 500) + 200), y: (window.innerHeight - 200), width: 85, height: 75, direction: 'up' })
+                enes.push({ id: i, x: window.innerWidth / 4 * 3, y: window.innerHeight / 4 * 3, width: 85, height: 75, direction: 'up' })
             }
         }
         this.props.newMonster(enes)

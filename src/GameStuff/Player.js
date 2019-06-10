@@ -60,6 +60,17 @@ export default class Player extends Component {
         clearInterval(this.intervalIDSprite);
     }
 
+    attackStart = () => {
+        setTimeout(this.props.attack, 0);
+        setTimeout(this.props.attack, 100);
+        setTimeout(this.props.attack, 200);
+        setTimeout(this.props.attack, 300);
+        setTimeout(this.props.attack, 400);
+
+        this.stepFrame = 1
+        this.attack = true
+    }
+
     handleKeyDown = (e) => {
         e.preventDefault()
 
@@ -77,6 +88,7 @@ export default class Player extends Component {
         }
         if (e.key === ' ' && !(this.attack)) {
             this.attackStart()
+            // setTimeout(this.attackStart, 3000);
         }
         if (e.key === 'e' || e.key === 'Shift') {
             this.props.useEgg()
@@ -97,12 +109,6 @@ export default class Player extends Component {
         if (e.key === 's' || e.key === 'ArrowDown') {
             this.down = false
         }
-    }
-
-    attackStart = () => {
-        this.props.attack()
-        this.stepFrame = 1
-        this.attack = true
     }
 
     updatePlayerSprite = () => {

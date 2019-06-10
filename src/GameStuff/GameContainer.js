@@ -4,7 +4,7 @@ import EnemiesGenerator from "./EnemiesGenerator";
 import FloorArt from './FloorArt';
 import WallArt from './WallArt';
 import FloorEggs from './FloorEggs';
-import HeldEggs from './HeldEggs';
+// import HeldEggs from './HeldEggs';
 import HealthBar from './HealthBar';
 
 export default class GameContainer extends Component {
@@ -34,7 +34,7 @@ export default class GameContainer extends Component {
                 { id: 3, x: 0, y: window.innerHeight - 80, width: window.innerWidth, height: 80 },//bottom wall
             ],
             floor: 1,
-            eggs: 3,
+            eggs: 0,
         }
         this.state = this.defaultState
     }
@@ -91,9 +91,10 @@ export default class GameContainer extends Component {
     }
 
     useEgg = () => {
-        if (this.state.eggs > 0 && this.state.player.health < 3) {
+        // this.state.eggs > 0 && 
+        // eggs: prevState.eggs - 1,
+        if (this.state.player.health < 3) {
             this.setState(prevState => ({
-                eggs: prevState.eggs - 1,
                 player: {
                     ...prevState.player,
                     health: prevState.player.health + 1,
@@ -106,12 +107,14 @@ export default class GameContainer extends Component {
         let egg = enemy
         let chance = Math.floor(Math.random() * 5)
         if (chance < 2) {
-            egg.id = this.state.groundEggs.length
+            egg.id = Math.floor(Math.random() * 99999)
             egg.width = 25
             egg.height = 25
             this.setState(prevState => ({
                 groundEggs: [...prevState.groundEggs, egg]
             }))
+            console.log(this.state.groundEggs);
+
         }
     }
 
@@ -154,8 +157,9 @@ export default class GameContainer extends Component {
     checkEggCollisions = () => {
         this.state.groundEggs.forEach(egg => {
             if (this.isColliding(egg, this.state.player)) {
+                this.useEgg()//temp till more mechanics
+                // eggs: prevState.eggs + 1,
                 this.setState(prevState => ({
-                    eggs: prevState.eggs + 1,
                     groundEggs: prevState.groundEggs.filter(oldEgg => oldEgg.id !== egg.id)
                 }))
             }
@@ -214,7 +218,7 @@ export default class GameContainer extends Component {
                     nextFloor={this.nextLevel}
                 />
                 <FloorEggs eggArr={this.state.groundEggs} />
-                <HeldEggs eggs={this.state.eggs} />
+                {/* <HeldEggs eggs={this.state.eggs} /> */}
                 <HealthBar health={this.state.player.health} />
             </div >
         )
