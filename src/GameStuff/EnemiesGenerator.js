@@ -9,12 +9,13 @@ export default class EnemiesGenerator extends Component {
     }
 
     componentWillUpdate(prevProps, prevState) {
-        if (this.props.enemies < 1) {
+        // if (this.props.enemies < 1) {
+
+        if (this.props.startNewLevel()) {
             this.generateEnemies()
             this.props.nextFloor(this.props.floor + 1)
         }
     }
-
 
     generateEnemies = () => {
         let enes = []

@@ -129,19 +129,19 @@ export default class Player extends Component {
             // this.setState(prevState => ({
             //     x: prevState.x - 5
             // }))
-            x -= 5
+            x -= 6
             this.direction = 'left'
         }
         if (this.right) {
-            x += 5
+            x += 6
             this.direction = 'right'
         }
         if (this.up) {
-            y += 5
+            y += 6
             this.direction = 'up'
         }
         if (this.down) {
-            y -= 5
+            y -= 6
             this.direction = 'down'
         }
         // if (this.attack) {

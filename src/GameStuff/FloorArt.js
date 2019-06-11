@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 // import Ground1 from '../images/floor/rockyGround.png'
 import Ground1 from '../images/floor/grass03.png'
-import Ground2 from '../images/floor/grassGround.png'
+// import Ground2 from '../images/floor/grassGround.png'
 // import Ground3 from '../images/floor/waterGround.png'
 
 export default class FloorArt extends Component {
@@ -10,7 +10,7 @@ export default class FloorArt extends Component {
 
         this.floorArr = {
             'g1': Ground1,
-            'g2': Ground2,
+            // 'g2': Ground2,
             // 'g3': Ground3,
         }
 
@@ -51,8 +51,10 @@ export default class FloorArt extends Component {
                     position: 'absolute',
                     top: `0px`,
                     left: `0px`,
+                    background: `url(${Ground1})`,
+                    zIndex: -1
                 }}>
-                {this.makeFloorImageGrid()}
+                {/* {this.makeFloorImageGrid()} */}
             </div>
         )
     }

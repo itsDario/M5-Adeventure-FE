@@ -189,6 +189,15 @@ export default class GameContainer extends Component {
         return touching
     }
 
+    checkDoorCollision = () => {
+        let doorLoc = { x: window.innerWidth / 2, y: window.innerHeight / 2, width: 100, height: 100 }
+        if (this.isColliding(this.state.player, doorLoc) && this.displayDoor()) {
+            return true
+        } else {
+            return false
+        }
+    }
+
     isColliding = (a, b) => {
         return !(
             ((a.y + a.height) < (b.y)) ||
@@ -198,12 +207,20 @@ export default class GameContainer extends Component {
         );
     }
 
+    displayDoor = () => {
+        if (this.state.enemies.length < 1) {
+            return true
+        } else {
+            return false
+        }
+    }
+
     render() {
         return (
             <div classID='gameBody'>
                 <FloorArt floor={this.state.floor} />
                 <WallArt wallArea={this.state.walls} />
-                <RoomDoor />
+                <RoomDoor displayDoor={this.displayDoor()} />
                 <Player
                     useEgg={this.useEgg}
                     resetState={this.resetPlayer}
@@ -217,6 +234,7 @@ export default class GameContainer extends Component {
                     enemies={this.state.enemies}
                     floor={this.state.floor}
                     nextFloor={this.nextLevel}
+                    startNewLevel={this.checkDoorCollision}
                 />
                 <FloorEggs eggArr={this.state.groundEggs} />
                 {/* <HeldEggs eggs={this.state.eggs} /> */}
