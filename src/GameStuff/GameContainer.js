@@ -4,7 +4,7 @@ import EnemiesGenerator from "./EnemiesGenerator";
 import FloorArt from './FloorArt';
 import WallArt from './WallArt';
 import FloorEggs from './FloorEggs';
-// import HeldEggs from './HeldEggs';
+import RoomDoor from './RoomDoor';
 import HealthBar from './HealthBar';
 
 export default class GameContainer extends Component {
@@ -203,6 +203,7 @@ export default class GameContainer extends Component {
             <div classID='gameBody'>
                 <FloorArt floor={this.state.floor} />
                 <WallArt wallArea={this.state.walls} />
+                <RoomDoor />
                 <Player
                     useEgg={this.useEgg}
                     resetState={this.resetPlayer}
