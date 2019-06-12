@@ -1,5 +1,4 @@
-.player{
-    background-repeat: no-repeat;
-    height: 128px;
-    /* width: 200px; */
+
+.whiteOut{
+    filter: brightness(0) invert(1);
 }

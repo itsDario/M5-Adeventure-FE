@@ -13,7 +13,7 @@ export default class RoomDoor extends Component {
                 alt='Door'
                 style={{
                     marginTop: `${window.innerHeight / 2}px`,
-                    marginLeft: `${window.innerWidth / 2}px`,
+                    marginLeft: `${window.innerWidth / 3}px`,
                     zIndex: 1,
                 }}
                 // src={`player` + `${this.props.playerInfo.direction}_1`}

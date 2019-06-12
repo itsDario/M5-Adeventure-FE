@@ -18,7 +18,7 @@ export default class GameContainer extends Component {
                 width: 80,
                 height: 80,
                 health: 3,
-                lastHit: Date.now(),
+                lastHit: 0,
                 direction: 'up',
                 swordSize: 30,
                 attacking: false,
@@ -41,6 +41,8 @@ export default class GameContainer extends Component {
     resetState = () => {
 
         this.setState(this.defaultState)
+        console.log('resetState', this.state.floor);
+
     }
 
     swordOffSet = (player) => {
@@ -190,7 +192,7 @@ export default class GameContainer extends Component {
     }
 
     checkDoorCollision = () => {
-        let doorLoc = { x: window.innerWidth / 2, y: window.innerHeight / 2, width: 100, height: 100 }
+        let doorLoc = { x: window.innerWidth / 3, y: window.innerHeight / 2, width: 100, height: 100 }
         if (this.isColliding(this.state.player, doorLoc) && this.displayDoor()) {
             return true
         } else {

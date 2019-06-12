@@ -69,6 +69,7 @@ export default class Player extends Component {
 
         this.stepFrame = 1
         this.attack = true
+        this.blink = false
     }
 
     handleKeyDown = (e) => {
@@ -112,7 +113,11 @@ export default class Player extends Component {
     }
 
     updatePlayerSprite = () => {
-        // console.log('update spritttte', this.props.playerInfo.direction);
+        if (this.props.playerInfo.lastHit + 1000 > Date.now()) {
+            this.blink = !this.blink
+        } else {
+            this.blink = false
+        }
         if (this.left || this.right || this.up || this.down || this.attack) {
             this.stepFrame += 1
             if (this.stepFrame > 4) {
@@ -214,7 +219,7 @@ export default class Player extends Component {
                     }}
                     // src={`player` + `${this.props.playerInfo.direction}_1`}
                     src={this.attack ? playerAttacks[`${this.props.playerInfo.direction}${this.stepFrame}`] : playerImages[`${this.props.playerInfo.direction}${this.stepFrame}`]}
-                    className={'player'}
+                    className={`${this.blink ? 'whiteOut' : ''}`}
                 />
             </div >
         )

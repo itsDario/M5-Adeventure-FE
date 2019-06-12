@@ -5,11 +5,12 @@ import Slime from "./Slime"
 export default class EnemiesGenerator extends Component {
 
     componentDidMount() {
-        this.generateEnemies()
+        // this.generateEnemies()
     }
 
     componentWillUpdate(prevProps, prevState) {
         // if (this.props.enemies < 1) {
+        // console.log('eGen', this.props.floor);
 
         if (this.props.startNewLevel()) {
             this.generateEnemies()
