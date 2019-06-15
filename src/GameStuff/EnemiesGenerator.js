@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
+import React from 'react'
 import Slime from "./Slime"
 
 
-export default class EnemiesGenerator extends Component {
+export default class EnemiesGenerator extends React.PureComponent {
 
     componentDidMount() {
         // this.generateEnemies()

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import slimeup_1 from '../images/slime/up1.png';
 import slimeup_2 from '../images/slime/up2.png';
 import slimeup_3 from '../images/slime/up3.png';
@@ -12,7 +12,7 @@ import slimeright_1 from '../images/slime/right1.png';
 import slimeright_2 from '../images/slime/right2.png';
 import slimeright_3 from '../images/slime/right3.png';
 
-export default class Slime extends Component {
+export default class Slime extends React.PureComponent {
 
     componentDidMount() {
         this.intervalIDSprite = setInterval(this.updateSlimeSprite, 400);

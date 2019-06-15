@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
+import React from 'react'
 import eggPic from '../images/misc/egg.png';
 
 
-export default class HeldEggs extends Component {
+export default class HeldEggs extends React.PureComponent {
     render() {
         return (
             <div

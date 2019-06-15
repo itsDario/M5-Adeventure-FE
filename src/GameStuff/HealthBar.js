@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import heart from '../images/misc/heart.png'
 import hollow from '../images/misc/hollow.png'
 
 
-export default class HealthBar extends Component {
+export default class HealthBar extends React.PureComponent {
 
     makeHeartImageRow = () => {
         let heartRow = []

@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
+import React from 'react'
 import eggPic from '../images/misc/egg.png';
 
-export default class FloorEggs extends Component {
+export default class FloorEggs extends React.PureComponent {
 
     renderEggs = () => {
         return this.props.eggArr.map((egg, i) => {

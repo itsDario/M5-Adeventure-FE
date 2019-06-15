@@ -1,13 +1,15 @@
-import React, { Component } from 'react'
+import React from 'react'
 import Player from "./Player";
 import EnemiesGenerator from "./EnemiesGenerator";
 import FloorArt from './FloorArt';
 import WallArt from './WallArt';
 import FloorEggs from './FloorEggs';
-import RoomDoor from './RoomDoor';
+import FloorHole from './FloorHole';
+import ShopDoor from './ShopDoor';
 import HealthBar from './HealthBar';
+import Shop from './Shop';
 
-export default class GameContainer extends Component {
+export default class GameContainer extends React.PureComponent {
 
     constructor(props) {
         super(props);
@@ -22,6 +24,7 @@ export default class GameContainer extends Component {
                 direction: 'up',
                 swordSize: 30,
                 attacking: false,
+                monies: 100,
             },
             enemies: [
             ],
@@ -35,6 +38,7 @@ export default class GameContainer extends Component {
             ],
             floor: 1,
             eggs: 0,
+            inShop: false,
         }
         this.state = this.defaultState
     }
@@ -87,6 +91,8 @@ export default class GameContainer extends Component {
     }
 
     nextLevel = (level) => {
+        console.log('nextLevel');
+
         this.setState({
             floor: level
         })
@@ -115,7 +121,6 @@ export default class GameContainer extends Component {
             this.setState(prevState => ({
                 groundEggs: [...prevState.groundEggs, egg]
             }))
-            console.log(this.state.groundEggs);
 
         }
     }
@@ -131,6 +136,12 @@ export default class GameContainer extends Component {
         }
     }
 
+    setWalls = (newWalls) => {
+        this.setState({
+            walls: newWalls
+        })
+    }
+
     newMonster = (enes) => {//x, y
 
         this.setState({
@@ -140,6 +151,8 @@ export default class GameContainer extends Component {
 
     checkPlayerEnemyCollisions = () => {
         this.checkEggCollisions()
+        this.checkShopEntering()
+        this.checkHoleCollision()
         this.state.enemies.forEach(enemy => {
             if (this.state.player.lastHit + 1000 < Date.now() && this.isColliding(enemy, this.state.player)) {
                 this.setState(prevState => ({
@@ -153,6 +166,23 @@ export default class GameContainer extends Component {
                     this.resetState()
                 }
             }
+        })
+    }
+
+    checkShopEntering = () => {
+        let doorLoc = { x: (window.innerWidth / 3) * 2, y: window.innerHeight / 2, width: 100, height: 100 }
+        if (this.isColliding(this.state.player, doorLoc) && this.displayDoor()) {
+            console.log('Entered Shop', this.state.inShop);
+
+            this.setState({
+                inShop: true
+            })
+        }
+    }
+
+    exitShop = () => {
+        this.setState({
+            inShop: false
         })
     }
 
@@ -191,9 +221,11 @@ export default class GameContainer extends Component {
         return touching
     }
 
-    checkDoorCollision = () => {
+    checkHoleCollision = () => {
         let doorLoc = { x: window.innerWidth / 3, y: window.innerHeight / 2, width: 100, height: 100 }
+
         if (this.isColliding(this.state.player, doorLoc) && this.displayDoor()) {
+            console.log('checkHole');
             return true
         } else {
             return false
@@ -217,12 +249,11 @@ export default class GameContainer extends Component {
         }
     }
 
-    render() {
+    renderStage = () => {
         return (
-            <div classID='gameBody'>
-                <FloorArt floor={this.state.floor} />
-                <WallArt wallArea={this.state.walls} />
-                <RoomDoor displayDoor={this.displayDoor()} />
+            <div>
+                <FloorArt floor={this.state.floor} inShop={this.state.inShop} />
+                <WallArt setWalls={this.setWalls} wallArea={this.state.walls} inShop={this.state.inShop} />
                 <Player
                     useEgg={this.useEgg}
                     resetState={this.resetPlayer}
@@ -230,18 +261,45 @@ export default class GameContainer extends Component {
                     returnInfo={this.setPlayerInfo}
                     attack={this.checkPlayerSwordHits}
                     swordOffSet={this.swordOffSet} />
-                <EnemiesGenerator
-                    newMonster={this.newMonster}
-                    returnInfo={this.setMonsterInfo}
-                    enemies={this.state.enemies}
-                    floor={this.state.floor}
-                    nextFloor={this.nextLevel}
-                    startNewLevel={this.checkDoorCollision}
-                />
-                <FloorEggs eggArr={this.state.groundEggs} />
-                {/* <HeldEggs eggs={this.state.eggs} /> */}
-                <HealthBar health={this.state.player.health} />
-            </div >
+            </div>
         )
+    }
+
+    // <Shop exitedShop={this.exitShop} />
+    render() {
+        if (this.state.inShop) {
+            return (
+                <div>
+                    {this.renderStage()}
+                    <Shop
+                        isColliding={this.isColliding}
+                        player={this.state.player}
+                        exitShop={this.exitShop}
+                        setWalls={this.setWalls}
+                    />
+                </div>
+            )
+
+        }
+        else {
+            return (
+                <div classID='gameBody'>
+                    <FloorHole displayDoor={this.displayDoor()} />
+                    <ShopDoor displayDoor={this.displayDoor()} />
+                    {this.renderStage()}
+                    <EnemiesGenerator
+                        newMonster={this.newMonster}
+                        returnInfo={this.setMonsterInfo}
+                        enemies={this.state.enemies}
+                        floor={this.state.floor}
+                        nextFloor={this.nextLevel}
+                        startNewLevel={this.checkHoleCollision}
+                    />
+                    <FloorEggs eggArr={this.state.groundEggs} />
+                    {/* <HeldEggs eggs={this.state.eggs} /> */}
+                    <HealthBar health={this.state.player.health} />
+                </div >
+            )
+        }
     }
 }

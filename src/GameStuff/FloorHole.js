@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import door from '../images/misc/castledoors.png';
+import React from 'react'
+import hole from '../images/misc/hole.png';
 
 
-export default class RoomDoor extends Component {
+export default class FloorHole extends React.PureComponent {
     state = {
         displayDoor: true
     }
@@ -17,26 +17,15 @@ export default class RoomDoor extends Component {
                     zIndex: 1,
                 }}
                 // src={`player` + `${this.props.playerInfo.direction}_1`}
-                src={door}
+                src={hole}
             ></img>
         } else {
             return <span></span>
         }
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        if (this.props.displayDoor !== this.state.displayDoor) {
-            this.setState({
-                displayDoor: this.props.displayDoor
-            })
-            return true
-        } else {
-            return false
-        }
-    }
-
     render() {
-        console.log('doorRender');
+        console.log('holeRender');
 
         return (
             <div>

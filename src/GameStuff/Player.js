@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import playerup_1 from '../images/player/movement/up1.png';
 import playerup_2 from '../images/player/movement/up2.png';
 import playerup_3 from '../images/player/movement/up3.png';
@@ -35,7 +35,7 @@ import attackright_4 from '../images/player/attacking/attackright4.png';
 
 import "../Player.css";
 
-export default class Player extends Component {
+export default class Player extends React.PureComponent {
 
     componentDidMount() {
         this.direction = 'up'
@@ -208,6 +208,7 @@ export default class Player extends Component {
                 height: '128px',
                 textAlign: 'center',
                 position: 'absolute',
+                zIndex: 5,
                 top: `${this.props.playerInfo.y}px`,
                 left: `${this.props.playerInfo.x}px`,
             }}>

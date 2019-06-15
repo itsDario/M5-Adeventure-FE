@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
+import React from 'react'
 // import Ground1 from '../images/floor/rockyGround.png'
 import Ground1 from '../images/floor/grass03.png'
 // import Ground2 from '../images/floor/grassGround.png'
 // import Ground3 from '../images/floor/waterGround.png'
 
-export default class FloorArt extends Component {
+export default class FloorArt extends React.PureComponent {
 
     makeFloorImageGrid = () => {
 
@@ -35,11 +35,6 @@ export default class FloorArt extends Component {
             }
         }
         return tileGrid
-    }
-
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return false
     }
 
     render() {

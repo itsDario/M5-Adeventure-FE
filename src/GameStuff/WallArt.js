@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
+import React from 'react'
 import Wall1 from '../images/walls/brickWall.png'
 
 
-export default class WallArt extends Component {
+export default class WallArt extends React.PureComponent {
 
     state = {
     }
@@ -25,12 +25,9 @@ export default class WallArt extends Component {
         })
     }
 
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return false
-    }
-
     render() {
+        console.log('renderWalls');
+
         return (
             <div
                 style={{
