@@ -33,11 +33,20 @@ import attackright_2 from '../images/player/attacking/attackright2.png';
 import attackright_3 from '../images/player/attacking/attackright3.png';
 import attackright_4 from '../images/player/attacking/attackright4.png';
 
+// import slashes1 from '../images/player/slashes/Alternative_2_12.png';
+import slashes1 from '../images/player/slashes/Alternative_2_11.png';
+import slashes2 from '../images/player/slashes/Alternative_2_10.png';
+import slashes3 from '../images/player/slashes/Alternative_2_09.png';
+import slashes4 from '../images/player/slashes/Alternative_2_08.png';
+// import slashes5 from '../images/player/slashes/Alternative_2_07.png';
+
 import "../Player.css";
 
 export default class Player extends React.PureComponent {
 
     componentDidMount() {
+        this.swordOffsetX = 0
+        this.swordOffsetY = 0
         this.direction = 'up'
         this.left = false
         this.right = false
@@ -136,18 +145,26 @@ export default class Player extends React.PureComponent {
             // }))
             x -= 6
             this.direction = 'left'
+            this.swordOffsetX = -this.props.playerInfo.swordSize
+            this.swordOffsetY = -this.props.playerInfo.height / 2
         }
         if (this.right) {
             x += 6
             this.direction = 'right'
+            this.swordOffsetX = this.props.playerInfo.swordSize - (this.props.playerInfo.width / 2)
+            this.swordOffsetY = -this.props.playerInfo.height / 2
         }
         if (this.up) {
             y += 6
             this.direction = 'up'
+            this.swordOffsetX = -this.props.playerInfo.width / 4
+            this.swordOffsetY = -this.props.playerInfo.swordSize - (this.props.playerInfo.width / 2)
         }
         if (this.down) {
             y -= 6
             this.direction = 'down'
+            this.swordOffsetX = -this.props.playerInfo.width / 4
+            this.swordOffsetY = this.props.playerInfo.swordSize - (this.props.playerInfo.height / 1.5)
         }
         // if (this.attack) {
         //     this.props.attack()
@@ -200,9 +217,15 @@ export default class Player extends React.PureComponent {
             'left3': attackleft_3,
             'left4': attackleft_4,
         }
+        // console.log(this.swordOffset);
 
+        const slashes = {
+            'frame1': slashes1,
+            'frame2': slashes2,
+            'frame3': slashes3,
+            'frame4': slashes4,
+        }
         return (
-
             <div style={{
                 width: '128px',
                 height: '128px',
@@ -221,6 +244,18 @@ export default class Player extends React.PureComponent {
                     // src={`player` + `${this.props.playerInfo.direction}_1`}
                     src={this.attack ? playerAttacks[`${this.props.playerInfo.direction}${this.stepFrame}`] : playerImages[`${this.props.playerInfo.direction}${this.stepFrame}`]}
                     className={`${this.blink ? 'whiteOut' : ''}`}
+                />
+                <img
+                    alt='slash'
+                    style={{
+                        display: `${this.attack ? 'block' : 'none'}`,
+                        position: 'absolute',
+                        left: `${this.swordOffsetX}px`,
+                        top: `${this.swordOffsetY}px`,
+                    }}
+                    src={slashes[`frame${this.stepFrame}`]}
+                // src={this.attack ? playerAttacks[`${this.props.playerInfo.direction}${this.stepFrame}`] : playerImages[`${this.props.playerInfo.direction}${this.stepFrame}`]}
+                // className={`${this.blink ? 'whiteOut' : ''}`}
                 />
             </div >
         )

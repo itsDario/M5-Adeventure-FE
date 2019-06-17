@@ -38,7 +38,7 @@ export default class GameContainer extends React.PureComponent {
                 { id: 3, x: 0, y: window.innerHeight - 80, width: window.innerWidth, height: 80 },//bottom wall
             ],
             floor: 1,
-            monies: 2,
+            monies: 5,
             eggs: 0,
             inShop: false,
             boughtEgg: false,
@@ -216,7 +216,7 @@ export default class GameContainer extends React.PureComponent {
                 this.setState(prevState => ({
                     player: {
                         ...prevState.player,
-                        swordSize: prevState.player.swordSize + 10,//statIncrease
+                        swordSize: prevState.player.swordSize + 20,//statIncrease
                     },
                     monies: prevState.monies - this.swordPrice,
                     boughtUpgrade: true

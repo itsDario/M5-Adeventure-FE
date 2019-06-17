@@ -1,5 +1,6 @@
 import React from 'react'
 import Dan from '../images/misc/Dan.png';
+import Bubble from '../images/misc/speech.png';
 import Table from '../images/misc/Table.png';
 import Shopdoor from '../images/misc/castledoors.png'
 import Egg from '../images/misc/egg.png'
@@ -71,6 +72,15 @@ export class Shop extends React.PureComponent {
                         position: 'absolute',
                         top: `${window.innerHeight / 6}px`,
                         left: `${window.innerWidth / 2}px`,
+                    }}>
+                </img>
+                <img
+                    alt='speech'
+                    src={Bubble}
+                    style={{
+                        position: 'absolute',
+                        top: `${window.innerHeight / 8}px`,
+                        left: `${(window.innerWidth / 2) + 30}px`,
                     }}>
                 </img>
                 <img
