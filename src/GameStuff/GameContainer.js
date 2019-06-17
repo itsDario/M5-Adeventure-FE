@@ -38,7 +38,7 @@ export default class GameContainer extends React.PureComponent {
                 { id: 3, x: 0, y: window.innerHeight - 80, width: window.innerWidth, height: 80 },//bottom wall
             ],
             floor: 1,
-            monies: 0,
+            monies: 2,
             eggs: 0,
             inShop: false,
             boughtEgg: false,
@@ -205,6 +205,10 @@ export default class GameContainer extends React.PureComponent {
                     boughtEgg: true
                 }))
                 console.log('BoughtEgg', this.state.monies);
+            } else if (!this.isColliding(this.state.player, eggLoc)) {
+                this.setState({
+                    boughtEgg: false
+                })
             }
 
             if (this.isColliding(this.state.player, upgradeLoc) && this.displayDoor() && !this.state.boughtUpgrade && this.state.monies >= this.swordPrice) {//upG
@@ -302,6 +306,7 @@ export default class GameContainer extends React.PureComponent {
                     inShop={this.state.inShop}
                 />
                 <WallArt
+                    floor={this.state.floor}
                     setWalls={this.setWalls}
                     wallArea={this.state.walls}
                     inShop={this.state.inShop}
@@ -310,6 +315,7 @@ export default class GameContainer extends React.PureComponent {
                 <ShopDoor
                     displayDoor={this.displayDoor()}
                     inShop={this.state.inShop}
+                    monies={this.state.monies}
                 />
                 <HeldMonies monies={this.state.monies} />
                 <Player

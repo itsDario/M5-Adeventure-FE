@@ -17,7 +17,7 @@ export default class HeldMonies extends PureComponent {
                     }}
                     src={coinPic}
                     alt='coin'
-                /> <span style={{ fontSize: '32px' }}>X {this.props.monies}</span>
+                /> <span style={{ fontSize: '32px', color: 'white' }}>X {this.props.monies}</span>
             </div>
         )
     }

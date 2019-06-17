@@ -1,5 +1,8 @@
 import React from 'react'
+import Wall0 from '../images/walls/spr_wood_1.png'
 import Wall1 from '../images/walls/brickWall.png'
+import Wall2 from '../images/walls/bricks2.png'
+
 
 
 export default class WallArt extends React.PureComponent {
@@ -9,6 +12,12 @@ export default class WallArt extends React.PureComponent {
 
     makeWallImageGrid = () => {
 
+        this.wallArr = {
+            'w0': Wall0,
+            'w1': Wall1,
+            'w2': Wall2,
+        }
+        this.randomWall = Math.floor(Math.random() * Object.keys(this.wallArr).length)
         return this.props.wallArea.map((wall, index) => {
             return <div
                 key={index}
@@ -19,7 +28,7 @@ export default class WallArt extends React.PureComponent {
                     height: `${wall.height}px`,
                     left: `${wall.x}px`,
                     top: `${wall.y}px`,
-                    background: `url(${Wall1})`,
+                    background: `url(${this.wallArr[`w${this.randomWall}`]})`,
                 }}
             ></div>
         })
