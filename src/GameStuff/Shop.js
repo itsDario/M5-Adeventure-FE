@@ -20,21 +20,36 @@ export class Shop extends React.PureComponent {
         ])
     }
 
-    // componentWillUnmount() {
-
-    // }
-
-    checkStoreCollisions = () => {
-        this.checkItemPurchase()
-        this.storeExit()
+    showUpgrade = () => {
+        if (!this.props.showUpgrade) {
+            return <img
+                alt='WeaponUpgrade'
+                src={Upgrade}
+                style={{
+                    position: 'absolute',
+                    top: `${window.innerHeight / 2}px`,
+                    left: `${window.innerWidth / 3}px`,
+                    width: '100px',
+                    height: '100px',
+                }}>
+            </img>
+        }
     }
 
-    storeExit = () => {
-
-    }
-
-    checkItemPurchase = () => {
-
+    showEgg = () => {
+        if (!this.props.showEgg) {
+            return <img
+                alt='buyEgg'
+                src={Egg}
+                style={{
+                    position: 'absolute',
+                    top: `${window.innerHeight / 2}px`,
+                    left: `${window.innerWidth / 2}px`,
+                    width: '100px',
+                    height: '100px',
+                }}>
+            </img>
+        }
     }
 
     render() {
@@ -78,28 +93,8 @@ export class Shop extends React.PureComponent {
                         left: `${window.innerWidth / 2}px`,
                     }}>
                 </img>
-                <img
-                    alt='buyEgg'
-                    src={Egg}
-                    style={{
-                        position: 'absolute',
-                        top: `${window.innerHeight / 2}px`,
-                        left: `${window.innerWidth / 4}px`,
-                        width: '100px',
-                        height: '100px',
-                    }}>
-                </img>
-                <img
-                    alt='WeaponUpgrade'
-                    src={Upgrade}
-                    style={{
-                        position: 'absolute',
-                        top: `${window.innerHeight / 2}px`,
-                        left: `${(window.innerWidth / 4) * 3}px`,
-                        width: '100px',
-                        height: '100px',
-                    }}>
-                </img>
+                {this.showEgg()}
+                {this.showUpgrade()}
             </div>
         )
     }

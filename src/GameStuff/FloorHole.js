@@ -3,17 +3,15 @@ import hole from '../images/misc/hole.png';
 
 
 export default class FloorHole extends React.PureComponent {
-    state = {
-        displayDoor: true
-    }
 
     displayDoor = () => {
-        if (this.state.displayDoor) {
+        if (this.props.displayDoor) {
             return <img
                 alt='Door'
                 style={{
-                    marginTop: `${window.innerHeight / 2}px`,
-                    marginLeft: `${window.innerWidth / 3}px`,
+                    position: 'absolute',
+                    top: `${window.innerHeight / 2}px`,
+                    left: `${window.innerWidth / 3}px`,
                     zIndex: 1,
                 }}
                 // src={`player` + `${this.props.playerInfo.direction}_1`}
@@ -28,9 +26,9 @@ export default class FloorHole extends React.PureComponent {
         console.log('holeRender');
 
         return (
-            <div>
+            <span>
                 {this.displayDoor()}
-            </div>
+            </span>
         )
     }
 }

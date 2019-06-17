@@ -3,11 +3,13 @@ import Player from "./Player";
 import EnemiesGenerator from "./EnemiesGenerator";
 import FloorArt from './FloorArt';
 import WallArt from './WallArt';
-import FloorEggs from './FloorEggs';
+import FloorCoins from './FloorCoins';
 import FloorHole from './FloorHole';
 import ShopDoor from './ShopDoor';
 import HealthBar from './HealthBar';
 import Shop from './Shop';
+import HeldEggs from './HeldEggs'
+import HeldMonies from './HeldMonies'
 
 export default class GameContainer extends React.PureComponent {
 
@@ -24,11 +26,10 @@ export default class GameContainer extends React.PureComponent {
                 direction: 'up',
                 swordSize: 30,
                 attacking: false,
-                monies: 100,
             },
             enemies: [
             ],
-            groundEggs: [
+            groundMonies: [
             ],
             walls: [
                 { id: 0, x: 0, y: 0, width: 80, height: window.innerHeight },//leftwall
@@ -37,10 +38,15 @@ export default class GameContainer extends React.PureComponent {
                 { id: 3, x: 0, y: window.innerHeight - 80, width: window.innerWidth, height: 80 },//bottom wall
             ],
             floor: 1,
+            monies: 0,
             eggs: 0,
             inShop: false,
+            boughtEgg: false,
+            boughtUpgrade: false,
         }
         this.state = this.defaultState
+        this.swordPrice = 5
+        this.eggPrice = 1
     }
     resetState = () => {
 
@@ -94,15 +100,18 @@ export default class GameContainer extends React.PureComponent {
         console.log('nextLevel');
 
         this.setState({
-            floor: level
+            floor: level,
+            boughtEgg: false,
+            boughtUpgrade: false,
         })
     }
 
     useEgg = () => {
         // this.state.eggs > 0 && 
-        // eggs: prevState.eggs - 1,
-        if (this.state.player.health < 3) {
+        // swordSize: 30,
+        if (this.state.player.health < 3 && this.state.eggs > 0) {
             this.setState(prevState => ({
+                eggs: prevState.eggs - 1,
                 player: {
                     ...prevState.player,
                     health: prevState.player.health + 1,
@@ -111,15 +120,15 @@ export default class GameContainer extends React.PureComponent {
         }
     }
 
-    spawnFloorEgg = (enemy) => {
-        let egg = enemy
-        let chance = Math.floor(Math.random() * 5)
+    spawnFloorCoin = (enemy) => {
+        let coin = enemy
+        let chance = Math.floor(Math.random() * 3)
         if (chance < 2) {
-            egg.id = Math.floor(Math.random() * 99999)
-            egg.width = 25
-            egg.height = 25
+            coin.id = Math.floor(Math.random() * 99999)
+            coin.width = 25
+            coin.height = 25
             this.setState(prevState => ({
-                groundEggs: [...prevState.groundEggs, egg]
+                groundMonies: [...prevState.groundMonies, coin]
             }))
 
         }
@@ -150,9 +159,8 @@ export default class GameContainer extends React.PureComponent {
     }
 
     checkPlayerEnemyCollisions = () => {
-        this.checkEggCollisions()
-        this.checkShopEntering()
-        this.checkHoleCollision()
+        this.checkMoneyCollisions()
+        this.checkShopDoor()
         this.state.enemies.forEach(enemy => {
             if (this.state.player.lastHit + 1000 < Date.now() && this.isColliding(enemy, this.state.player)) {
                 this.setState(prevState => ({
@@ -169,30 +177,68 @@ export default class GameContainer extends React.PureComponent {
         })
     }
 
-    checkShopEntering = () => {
-        let doorLoc = { x: (window.innerWidth / 3) * 2, y: window.innerHeight / 2, width: 100, height: 100 }
-        if (this.isColliding(this.state.player, doorLoc) && this.displayDoor()) {
-            console.log('Entered Shop', this.state.inShop);
+    checkShopDoor = () => {
+        if (this.state.inShop) {
+            let doorLoc = { x: window.innerWidth / 2, y: window.innerHeight / 3 * 2, width: 100, height: 100 }
+            let eggLoc = { x: window.innerWidth / 2, y: window.innerHeight / 2, width: 100, height: 100 }
+            let upgradeLoc = { x: window.innerWidth / 3, y: window.innerHeight / 2, width: 100, height: 100 }
 
-            this.setState({
-                inShop: true
-            })
+            if (this.isColliding(this.state.player, doorLoc) && this.displayDoor()) {//exit
+                console.log('Exited Shop', this.state.inShop);
+
+                this.setState({
+                    inShop: false,
+                    walls: [
+                        { id: 0, x: 0, y: 0, width: 80, height: window.innerHeight },//leftwall
+                        { id: 1, x: window.innerWidth - 80, y: 0, width: 80, height: window.innerHeight },//rightwall
+                        { id: 2, x: 0, y: 0, width: window.innerWidth, height: 80 },//top wall
+                        { id: 3, x: 0, y: window.innerHeight - 80, width: window.innerWidth, height: 80 },//bottom wall
+                    ]
+                })
+            }
+
+            if (this.isColliding(this.state.player, eggLoc) && this.displayDoor() && !this.state.boughtEgg && this.state.monies >= this.eggPrice) {//egg
+
+                this.setState(prevState => ({
+                    monies: prevState.monies - this.eggPrice,
+                    eggs: prevState.eggs + 1,//eggIncrease
+                    boughtEgg: true
+                }))
+                console.log('BoughtEgg', this.state.monies);
+            }
+
+            if (this.isColliding(this.state.player, upgradeLoc) && this.displayDoor() && !this.state.boughtUpgrade && this.state.monies >= this.swordPrice) {//upG
+
+                this.setState(prevState => ({
+                    player: {
+                        ...prevState.player,
+                        swordSize: prevState.player.swordSize + 10,//statIncrease
+                    },
+                    monies: prevState.monies - this.swordPrice,
+                    boughtUpgrade: true
+                }))
+                console.log('Bought UpG', this.state.monies);
+            }
+        } else {
+            let doorLoc = { x: (window.innerWidth / 3) * 2, y: window.innerHeight / 2, width: 100, height: 100 }
+
+            if (this.isColliding(this.state.player, doorLoc) && this.displayDoor()) {
+                console.log('Entered Shop', this.state.inShop);
+
+                this.setState({
+                    inShop: true
+                })
+            }
         }
     }
 
-    exitShop = () => {
-        this.setState({
-            inShop: false
-        })
-    }
-
-    checkEggCollisions = () => {
-        this.state.groundEggs.forEach(egg => {
-            if (this.isColliding(egg, this.state.player)) {
-                this.useEgg()//temp till more mechanics
-                // eggs: prevState.eggs + 1,
+    checkMoneyCollisions = () => {//checkMoneyCollisions
+        this.state.groundMonies.forEach(coin => {
+            if (this.isColliding(coin, this.state.player)) {
+                // this.useEgg()//temp till more mechanics
                 this.setState(prevState => ({
-                    groundEggs: prevState.groundEggs.filter(oldEgg => oldEgg.id !== egg.id)
+                    monies: prevState.monies + 1,
+                    groundMonies: prevState.groundMonies.filter(oldCoin => oldCoin.id !== coin.id)
                 }))
             }
         })
@@ -206,7 +252,7 @@ export default class GameContainer extends React.PureComponent {
                     enemies: prevState.enemies.filter(oldEnemy => oldEnemy.id !== enemy.id),
                     coins: prevState.coins + 1,
                 }))
-                this.spawnFloorEgg(enemy)
+                this.spawnFloorCoin(enemy)
             }
         })
     }
@@ -225,7 +271,6 @@ export default class GameContainer extends React.PureComponent {
         let doorLoc = { x: window.innerWidth / 3, y: window.innerHeight / 2, width: 100, height: 100 }
 
         if (this.isColliding(this.state.player, doorLoc) && this.displayDoor()) {
-            console.log('checkHole');
             return true
         } else {
             return false
@@ -252,20 +297,34 @@ export default class GameContainer extends React.PureComponent {
     renderStage = () => {
         return (
             <div>
-                <FloorArt floor={this.state.floor} inShop={this.state.inShop} />
-                <WallArt setWalls={this.setWalls} wallArea={this.state.walls} inShop={this.state.inShop} />
+                <FloorArt
+                    floor={this.state.floor}
+                    inShop={this.state.inShop}
+                />
+                <WallArt
+                    setWalls={this.setWalls}
+                    wallArea={this.state.walls}
+                    inShop={this.state.inShop}
+                />
+                <HeldEggs eggs={this.state.eggs} />
+                <ShopDoor
+                    displayDoor={this.displayDoor()}
+                    inShop={this.state.inShop}
+                />
+                <HeldMonies monies={this.state.monies} />
                 <Player
                     useEgg={this.useEgg}
                     resetState={this.resetPlayer}
                     playerInfo={this.state.player}
                     returnInfo={this.setPlayerInfo}
                     attack={this.checkPlayerSwordHits}
-                    swordOffSet={this.swordOffSet} />
+                    swordOffSet={this.swordOffSet}
+                />
+                <HealthBar health={this.state.player.health} />
             </div>
         )
     }
 
-    // <Shop exitedShop={this.exitShop} />
     render() {
         if (this.state.inShop) {
             return (
@@ -274,8 +333,9 @@ export default class GameContainer extends React.PureComponent {
                     <Shop
                         isColliding={this.isColliding}
                         player={this.state.player}
-                        exitShop={this.exitShop}
                         setWalls={this.setWalls}
+                        showEgg={this.state.boughtEgg}
+                        showUpgrade={this.state.boughtUpgrade}
                     />
                 </div>
             )
@@ -285,7 +345,6 @@ export default class GameContainer extends React.PureComponent {
             return (
                 <div classID='gameBody'>
                     <FloorHole displayDoor={this.displayDoor()} />
-                    <ShopDoor displayDoor={this.displayDoor()} />
                     {this.renderStage()}
                     <EnemiesGenerator
                         newMonster={this.newMonster}
@@ -295,9 +354,7 @@ export default class GameContainer extends React.PureComponent {
                         nextFloor={this.nextLevel}
                         startNewLevel={this.checkHoleCollision}
                     />
-                    <FloorEggs eggArr={this.state.groundEggs} />
-                    {/* <HeldEggs eggs={this.state.eggs} /> */}
-                    <HealthBar health={this.state.player.health} />
+                    <FloorCoins coinArr={this.state.groundMonies} />
                 </div >
             )
         }

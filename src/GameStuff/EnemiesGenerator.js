@@ -1,16 +1,11 @@
-import React from 'react'
+import React, { Component } from 'react'
 import Slime from "./Slime"
 
 
-export default class EnemiesGenerator extends React.PureComponent {
+export default class EnemiesGenerator extends Component {
 
-    componentDidMount() {
-        // this.generateEnemies()
-    }
-
-    componentWillUpdate(prevProps, prevState) {
-        // if (this.props.enemies < 1) {
-        // console.log('eGen', this.props.floor);
+    componentDidUpdate() {
+        console.log('EnemiesGen Update');
 
         if (this.props.startNewLevel()) {
             this.generateEnemies()
